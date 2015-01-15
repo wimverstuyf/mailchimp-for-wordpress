@@ -306,7 +306,7 @@ class MC4WP_Lite_Admin
 		wp_register_script( 'mc4wp-field-helper', MC4WP_LITE_PLUGIN_URL . 'assets/js/field-helper.js', array( 'mithril' ), MC4WP_LITE_VERSION, true );
 
 
-		wp_enqueue_script( array( 'mc4wp-field-helper', 'mc4wp-beautifyhtml', 'mc4wp-admin' ) );
+		wp_enqueue_script( array( 'mc4wp-admin' ) );
 		wp_localize_script( 'mc4wp-admin', 'mc4wp',
 			array(
 				'hasCaptchaPlugin' => $this->has_captcha_plugin,
@@ -325,6 +325,8 @@ class MC4WP_Lite_Admin
 				'mailchimpLists' => $mailchimp->get_lists()
 			)
 		);
+
+		wp_enqueue_script( 'mc4wp-field-helper' );
 	}
 
 	/**
