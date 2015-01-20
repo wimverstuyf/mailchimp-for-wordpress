@@ -64,42 +64,43 @@ if( ! defined("MC4WP_LITE_VERSION") ) {
 					<?php } ?>
 
 					</tr>
-					<tr valign="top">
-						<td colspan="3">
-							<h4><?php _e( 'Form mark-up', 'mailchimp-for-wp' ); ?></h4>
+					</table>
 
-							<?php if ( ! empty( $missing_form_fields ) ) {
 
-								?><p class="mc4wp-notice missing-form-fields"><?php
+					<h4><?php _e( 'Form mark-up', 'mailchimp-for-wp' ); ?></h4>
 
-								echo __( 'Your form is missing the following (required) form fields:', 'mailchimp-for-wp') . ' <br /><br />';
+					<?php if ( ! empty( $missing_form_fields ) ) {
 
-								foreach( $missing_form_fields as $missing_field ) {
-									echo '- ' . $missing_field . '<br />';
-								}
-								?></p><?php
+						?><p class="mc4wp-notice missing-form-fields"><?php
 
+						echo __( 'Your form is missing the following (required) form fields:', 'mailchimp-for-wp') . ' <br /><br />';
+
+						foreach( $missing_form_fields as $missing_field ) {
+							printf( "- %s<br />", $missing_field );
+						}
+						?></p><?php
+
+					} ?>
+
+					<div class="mc4wp-wrapper clearfix">
+						<div class="mc4wp-col mc4wp-first">
+							<?php
+							if( function_exists( 'wp_editor' ) ) {
+								wp_editor( esc_textarea( $opts['markup'] ), 'mc4wpformmarkup', array( 'tinymce' => false, 'media_buttons' => true, 'textarea_name' => 'mc4wp_lite_form[markup]'));
+							} else {
+								?><textarea class="widefat" cols="160" rows="20" id="mc4wpformmarkup" name="mc4wp_lite_form[markup]"><?php echo esc_textarea( $opts['markup'] ); ?></textarea><?php
 							} ?>
+							<p class="mc4wp-form-usage"><?php printf( __( 'Use the shortcode %s to display this form inside a post, page or text widget.' ,'mailchimp-for-wp' ), '<input type="text" onfocus="this.select();" readonly="readonly" value="[mc4wp_form]" class="mc4wp-shortcode-example">' ); ?></p>
+						</div>
 
-							<div class="mc4wp-wrapper">
-								<div class="mc4wp-col mc4wp-first">
-									<?php 
-									if( function_exists( 'wp_editor' ) ) {
-										wp_editor( esc_textarea( $opts['markup'] ), 'mc4wpformmarkup', array( 'tinymce' => false, 'media_buttons' => true, 'textarea_name' => 'mc4wp_lite_form[markup]'));
-									} else {
-										?><textarea class="widefat" cols="160" rows="20" id="mc4wpformmarkup" name="mc4wp_lite_form[markup]"><?php echo esc_textarea( $opts['markup'] ); ?></textarea><?php
-									} ?>
-									<p class="mc4wp-form-usage"><?php printf( __( 'Use the shortcode %s to display this form inside a post, page or text widget.' ,'mailchimp-for-wp' ), '<input type="text" onfocus="this.select();" readonly="readonly" value="[mc4wp_form]" class="mc4wp-shortcode-example">' ); ?></p>
-								</div>
+						<div class="mc4wp-col mc4wp-last">
+							<?php include('parts/admin-field-wizard.php'); ?>
+						</div>
 
-								<div class="mc4wp-col mc4wp-last">
-									<?php include('parts/admin-field-wizard.php'); ?>
-								</div>
-							</div>
-						</td>
-					</tr>
+						<br style="clear:both;">
+					</div>
 
-			</table>
+
 
 	<?php submit_button(); ?>
 

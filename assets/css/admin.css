@@ -34,25 +34,6 @@
 	color:white;
 }
 
-#mc4wp-fw h4{ 
-	margin-top: 0; 
-}
-#mc4wp-fw p{ 
-	margin-bottom: 1em; 
-}
-
-#mc4wp-fw-fields { 
-	display:none; 
-}
-
-#mc4wp-fw-preview { 
-	font-family: "Courier New", Courier, monospace;
-	min-height:200px;
-	font-size:11px;
-	background:white;
-	z-index:99; 
-}
-
 #mc4wp-lists{ 
 	margin:0; 
 }
@@ -190,4 +171,36 @@ table.mc4wp-help tr:hover {
 		display: none;
 	}
 	
+}
+
+
+/* Field Helper */
+#mc4wp-fw h4{
+	margin-top: 0;
+}
+
+#mc4wp-fw-preview {
+	font-family: "Courier New", Courier, monospace;
+	min-height:200px;
+	font-size:11px;
+	background:white;
+	z-index:99;
+}
+
+#mc4wp-field-helper label {
+	display: block;
+	font-weight: bold;
+}
+
+#mc4wp-field-helper input[type="text"] {
+	width: 100%;
+}
+
+.muted,
+.muted .req {
+	color: lightGrey;
+}
+
+.req {
+	color: red;
 }
