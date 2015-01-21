@@ -1,5 +1,5 @@
-//(function() {
-//	'use strict';
+(function() {
+	'use strict';
 
 	var fieldHelper = {};
 
@@ -135,7 +135,7 @@
 			var selectedField = fieldSelector.availableFields()[ selectedFieldIndex - 1 ];
 
 			// update selected field
-			fieldBuilder.selectedField( selectedField );
+			fieldBuilder.vm.updateConfig( selectedField );
 		},
 
 		/**
@@ -227,48 +227,60 @@
 		this.value = m.prop( data.value || "" );
 	};
 
-	// Vars
-	fieldBuilder.fields = [];
-	fieldBuilder.selectedField = m.prop( null );
-
 	// Functions
+	fieldBuilder.vm = {};
+	fieldBuilder.vm.init = function() {
+		this.config = new fieldBuilder.Config( {});
+		this.selectedField = m.prop( null );
+	};
+
+	fieldBuilder.vm.updateConfig = function( field ) {
+
+		this.selectedField( field );
+
+		this.config.label( field.label() );
+		this.config.placeholder( "Your " + field.label().toLowerCase() );
+		this.config.isRequired( field.required() );
+		this.config.type( field.fieldType() );
+
+	};
 
 
 	/**
 	 * Renders the configuration fields for a given field type
 	 *
-	 * @param field
-	 * @param ctrl
 	 * @returns {*[]}
 	 */
-	fieldBuilder.renderConfigFields = function( field, ctrl ) {
+	fieldBuilder.renderConfigFields = function() {
 
-		switch( field.fieldType() ) {
+		var cfg = fieldBuilder.vm.config;
+
+		switch( cfg.type() ) {
 			case 'text':
 			case 'email':
 
 				return [
 					m( "p", [
 						m( "label", "Label Text"),
-						m( "input", { type: "text", value: field.label(), onchange: m.withAttr( "value", ctrl.config.label ) } )
+						m( "input", { type: "text", value: cfg.label(), onchange: m.withAttr( "value", fieldBuilder.vm.config.label ) } )
 					]),
 					m( "p", [
 						m( "label", "Placeholder Text" ),
-						m( "input", { type: "text", value: field.label() } )
+						m( "input", { type: "text", value: cfg.placeholder(), onchange: m.withAttr( "value", fieldBuilder.vm.config.placeholder ) } )
 					]),
 					m( "p", [
 						m( "label", "Default Value" ),
-						m( "input", { type: "text" } )
+						m( "input", { type: "text", onchange: m.withAttr( "value", fieldBuilder.vm.config.value ) } )
 					]),
 					m( "p", [
 						m( "label", [
-							m( "input", { type: "checkbox" } ),
+							m( "input", { type: "checkbox", checked: cfg.wrapInP(), onchange: m.withAttr( "checked", fieldBuilder.vm.config.wrapInP ) } ),
 							m( "span", "Wrap in paragraphs?" )
 						])
 					]),
 					m( "p", [
 						m( "label", [
-							m( "input", { type: "checkbox" } ),
+							m( "input", { type: "checkbox", checked: cfg.isRequired(), onchange: m.withAttr( "checked", fieldBuilder.vm.config.isRequired ) } ),
 							m( "span", "This is a required field." )
 						])
 					])
@@ -282,7 +294,7 @@
 	 * Controller
 	 */
 	fieldBuilder.controller = function() {
-		this.config = new fieldBuilder.Config( {});
+		fieldBuilder.vm.init();
 	};
 
 	/**
@@ -293,18 +305,20 @@
 	 */
 	fieldBuilder.view = function( ctrl ) {
 
+		var vm = fieldBuilder.vm;
+
 		// If no field is selected, show a message to choose a field first..
-		if( fieldBuilder.selectedField() == null ) {
+		if( vm.selectedField() == null ) {
 			return m( "p", "Select a field.." );
 		}
 
 		// Output configuration fields, add to form button & code preview
 		return [
-			fieldBuilder.renderConfigFields( fieldBuilder.selectedField(), ctrl ),
+			fieldBuilder.renderConfigFields(),
 			m( "p", [
 				m("button.button", "Add to form")
 			]),
-			m( "textarea.code-preview", { id: "code-preview" }, codePreview.render( ctrl.config ) )
+			m( "textarea.code-preview", { id: "code-preview" }, codePreview.render( fieldBuilder.vm.config ) )
 		];
 	};
 
@@ -317,6 +331,10 @@
 	codePreview.preview = m.prop( '' );
 
 	codePreview.render = function( config ) {
+
+		console.log( config.label() );
+
+		console.log( "rendering code preview.." );
 
 		// compare preview with last generated preview
 		//if( codePreview.config() == config ) {
@@ -336,4 +354,4 @@
 		return codePreview.preview();
 	};
 
-//})();
+})();
