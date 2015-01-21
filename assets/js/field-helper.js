@@ -2,6 +2,7 @@
 	'use strict';
 
 	var fieldHelper = {};
+	fieldHelper.formContent =  document.getElementById('mc4wpformmarkup');
 
 	// Models
 	var List = function( data ) {
@@ -36,7 +37,6 @@
 	var fieldSelector = {
 
 		// properties
-		formContent: document.getElementById('mc4wpformmarkup'),
 		selectedLists: m.prop( [] ),
 		selectedField: m.prop( null ),
 		availableFieldGroups: m.prop( [] ),
@@ -122,7 +122,7 @@
 		 * @returns {boolean}
 		 */
 		formHasField: function( fieldName ) {
-			return fieldSelector.formContent.value.toLowerCase().indexOf('name="'+ fieldName.toLowerCase() +'"') > -1;
+			return fieldHelper.formContent.value.toLowerCase().indexOf('name="'+ fieldName.toLowerCase() +'"') > -1;
 		},
 
 		/**
@@ -234,15 +234,26 @@
 		this.selectedField = m.prop( null );
 	};
 
+	/**
+	 * Update the config with some preset values taken from the field provided
+	 *
+	 * @param field
+	 */
 	fieldBuilder.vm.updateConfig = function( field ) {
-
+		// update selected field
 		this.selectedField( field );
 
-		this.config.label( field.label() );
-		this.config.placeholder( "Your " + field.label().toLowerCase() );
-		this.config.isRequired( field.required() );
 		this.config.type( field.fieldType() );
 
+		if( field.fieldType() == 'submit' ) {
+			this.config.value("Subscribe");
+		} else {
+			this.config.label( field.label() );
+			this.config.placeholder( "Your " + field.label().toLowerCase() );
+			this.config.value('');
+		}
+
+		this.config.isRequired( field.required() );
 	};
 
 
@@ -270,7 +281,7 @@
 					]),
 					m( "p", [
 						m( "label", "Default Value" ),
-						m( "input", { type: "text", onchange: m.withAttr( "value", fieldBuilder.vm.config.value ) } )
+						m( "input", { type: "text", value: cfg.value(), onchange: m.withAttr( "value", fieldBuilder.vm.config.value ) } )
 					]),
 					m( "p", [
 						m( "label", [
@@ -287,6 +298,46 @@
 				];
 
 				break;
+
+			case 'submit':
+
+				return [
+					m( "p", [
+						m( "label", "Button Text" ),
+						m( "input", { type: "text", value: cfg.value(), onchange: m.withAttr( "value", fieldBuilder.vm.config.value ) } )
+					]),
+					m( "p", [
+						m( "label", [
+							m( "input", { type: "checkbox", checked: cfg.wrapInP(), onchange: m.withAttr( "checked", fieldBuilder.vm.config.wrapInP ) } ),
+							m( "span", "Wrap in paragraphs?" )
+						])
+					])
+				];
+
+				break;
+		}
+	};
+
+	/**
+	 * Add the current code preview to the WP Editor
+	 */
+	fieldBuilder.addToForm = function( evt ) {
+
+
+		var result = false;
+
+		// try to insert in QuickTags editor at cursor position
+		if( fieldBuilder.vm.config.type() !== 'submit'
+			&& typeof wpActiveEditor != 'undefined'
+			&& typeof QTags != 'undefined'
+			&& QTags.insertContent ) {
+			result = QTags.insertContent( codePreview.code() );
+		}
+
+		// If QTags is not defined (when using non-default Editor), just append
+		// also append when field type is "submit"
+		if( ! result ) {
+			fieldHelper.formContent.value = fieldHelper.formContent.value + "\n" + codePreview.code();
 		}
 	};
 
@@ -316,9 +367,9 @@
 		return [
 			fieldBuilder.renderConfigFields(),
 			m( "p", [
-				m("button.button", "Add to form")
+				m("button.button", { type: "button", onclick: fieldBuilder.addToForm }, "Add to form")
 			]),
-			m( "textarea.code-preview", { id: "code-preview" }, codePreview.render( fieldBuilder.vm.config ) )
+			m( "textarea.code-preview", { id: "code-preview", rows: 8 }, codePreview.render( fieldBuilder.vm.config ) )
 		];
 	};
 
@@ -328,13 +379,9 @@
 
 	var codePreview = {};
 	codePreview.config = m.prop( null );
-	codePreview.preview = m.prop( '' );
+	codePreview.code = m.prop( '' );
 
 	codePreview.render = function( config ) {
-
-		console.log( config.label() );
-
-		console.log( "rendering code preview.." );
 
 		// compare preview with last generated preview
 		//if( codePreview.config() == config ) {
@@ -343,15 +390,43 @@
 		//}
 
 		// create new HTML string
-		var html = '';
+		var code = document.createElement( 'div' );
 
-		// add label to string
-		html += config.label();
+		// wrap code in paragraph tags
+		if( config.wrapInP() ) {
+			var pElement = document.createElement('p');
+			code.appendChild( pElement );
+		}
+
+		// add label?
+		if( config.label().length > 0 ) {
+			var labelElement = document.createElement('label');
+			labelElement.innerText = config.label();
+			( pElement || code ).appendChild( labelElement );
+		}
+
+		// add input
+		var inputElement = document.createElement('input');
+		inputElement.type = config.type();
+
+		// add input placeholder
+		if( config.placeholder().length > 0 ) {
+			inputElement.placeholder = config.placeholder();
+		}
+
+		// add value
+		if( config.value().length > 0 ) {
+			inputElement.value = config.value();
+		}
+
+		// add element to code
+		( pElement || code ).appendChild( inputElement );
+
 
 		// store & return preview
 		codePreview.config( config );
-		codePreview.preview( html );
-		return codePreview.preview();
+		codePreview.code( code.innerHTML );
+		return codePreview.code();
 	};
 
 })();

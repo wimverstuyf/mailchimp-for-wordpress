@@ -192,7 +192,8 @@ table.mc4wp-help tr:hover {
 	font-weight: bold;
 }
 
-#mc4wp-field-helper input[type="text"] {
+#mc4wp-field-helper input[type="text"],
+#mc4wp-field-helper textarea {
 	width: 100%;
 }
 
