@@ -265,12 +265,15 @@
 	fieldBuilder.renderConfigFields = function() {
 
 		var cfg = fieldBuilder.vm.config;
+		var fields = [];
 
 		switch( cfg.type() ) {
 			case 'text':
 			case 'email':
+			case 'url':
+			case 'number':
 
-				return [
+				fields = fields.concat([
 					m( "p", [
 						m( "label", "Label Text"),
 						m( "input", { type: "text", value: cfg.label(), onchange: m.withAttr( "value", fieldBuilder.vm.config.label ) } )
@@ -295,13 +298,25 @@
 							m( "span", "This is a required field." )
 						])
 					])
-				];
+				]);
+				break;
 
+			case 'number':
+				fields = fields.concat([
+					m( "p", [
+						m( "label", "Minimum" ),
+						m( "input", { type: "number" } )
+					]),
+					m( "p", [
+						m( "label", "Maximum" ),
+						m( "input", { type: "number" } )
+					])
+				]);
 				break;
 
 			case 'submit':
 
-				return [
+				fields = fields.concat([
 					m( "p", [
 						m( "label", "Button Text" ),
 						m( "input", { type: "text", value: cfg.value(), onchange: m.withAttr( "value", fieldBuilder.vm.config.value ) } )
@@ -312,10 +327,12 @@
 							m( "span", "Wrap in paragraphs?" )
 						])
 					])
-				];
-
+				]);
 				break;
+
 		}
+
+		return fields;
 	};
 
 	/**
@@ -417,6 +434,11 @@
 		// add value
 		if( config.value().length > 0 ) {
 			inputElement.value = config.value();
+		}
+
+		// add required attribute
+		if( config.isRequired() ) {
+			inputElement.required = "required";
 		}
 
 		// add element to code
