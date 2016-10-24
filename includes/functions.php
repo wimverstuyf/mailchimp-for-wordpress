@@ -380,3 +380,15 @@ function mc4wp_refresh_mailchimp_lists() {
     $mailchimp = new MC4WP_MailChimp();
     $mailchimp->fetch_lists();
 }
+
+/**
+ * Asks user for a deactivation reason.
+ *
+ * @ignore
+ */
+function _mc4wp_ask_for_deactivation_reason() {
+    ob_start();
+    require dirname( __FILE__ ) . '/views/deactivation-reason.php';
+    $content = ob_get_clean();
+    wp_die( $content, 'What made you deactivate?' );
+}

@@ -134,6 +134,11 @@ function _mc4wp_on_plugin_activation() {
  */
 function _mc4wp_on_plugin_deactivation() {
     wp_clear_scheduled_hook( 'mc4wp_refresh_mailchimp_lists' );
+
+    global $pagenow;
+    if( $pagenow === 'plugins.php' ) {
+       register_shutdown_function( '_mc4wp_ask_for_deactivation_reason' );
+    }
 }
 
 register_activation_hook( __FILE__, '_mc4wp_on_plugin_activation' );
