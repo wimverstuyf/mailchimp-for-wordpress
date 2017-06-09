@@ -64,6 +64,7 @@ return array(
     'MC4WP_Queue_Job' => $baseDir . '/includes/class-queue-job.php',
     'MC4WP_Registration_Form_Integration' => $baseDir . '/integrations/wp-registration-form/class-registration-form.php',
     'MC4WP_Request' => $baseDir . '/includes/class-request.php',
+    'MC4WP_Strong_Testimonials_Integration' => $baseDir . '/integrations/strong-testimonials/class-strong-testimonials.php',
     'MC4WP_Tools' => $baseDir . '/includes/class-tools.php',
     'MC4WP_Update_Optin' => $baseDir . '/includes/admin/class-update-optin.php',
     'MC4WP_Upgrade_Routines' => $baseDir . '/includes/admin/class-upgrade-routines.php',

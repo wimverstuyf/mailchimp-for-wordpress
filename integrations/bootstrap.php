@@ -44,6 +44,7 @@ mc4wp_register_integration( 'easy-digital-downloads', 'MC4WP_Easy_Digital_Downlo
 mc4wp_register_integration( 'contact-form-7', 'MC4WP_Contact_Form_7_Integration', true );
 mc4wp_register_integration( 'events-manager', 'MC4WP_Events_Manager_Integration' );
 mc4wp_register_integration( 'memberpress', 'MC4WP_MemberPress_Integration' );
+mc4wp_register_integration( 'strong-testimonials', 'MC4WP_Strong_Testimonials_Integration' );
 mc4wp_register_integration( 'custom', 'MC4WP_Custom_Integration', true );
 require dirname(__FILE__) . '/ninja-forms/bootstrap.php';
 
