@@ -61,4 +61,12 @@ class MC4WP_Strong_Testimonials_Integration extends MC4WP_Integration {
 		return class_exists( 'Strong_Testimonials', false );
 	}
 
+	/**
+	 * @since 3.0
+	 * @return array
+	 */
+	public function get_ui_elements() {
+		return array_diff( parent::get_ui_elements(), array( 'enabled', 'implicit' ) );
+	}
+
 }
