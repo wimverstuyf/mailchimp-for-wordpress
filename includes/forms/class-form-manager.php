@@ -22,11 +22,6 @@ class MC4WP_Form_Manager {
 	protected $listener;
 
 	/**
-	 * @var MC4WP_Form_Tags
-	 */
-	protected $tags;
-
-	/**
 	* @var MC4WP_Form_Previewer
 	*/
 	protected $previewer;
@@ -36,7 +31,6 @@ class MC4WP_Form_Manager {
 	 */
 	public function __construct() {
 		$this->output_manager = new MC4WP_Form_Output_Manager();
-		$this->tags = new MC4WP_Form_Tags();
 		$this->listener = new MC4WP_Form_Listener();
 		$this->previewer = new MC4WP_Form_Previewer();
 	}
@@ -51,7 +45,6 @@ class MC4WP_Form_Manager {
 
 		$this->listener->add_hooks();
 		$this->output_manager->add_hooks();
-		$this->tags->add_hooks();
 		$this->previewer->add_hooks();
 	}
 
@@ -118,13 +111,5 @@ class MC4WP_Form_Manager {
 
 		return null;
 	}
-
-	/**
-	 * Return all tags
-	 *
-	 * @return array
-	 */
-	public function get_tags() {
-		return $this->tags->get();
-	}
+	
 }

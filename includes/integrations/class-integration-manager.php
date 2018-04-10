@@ -14,26 +14,11 @@ class MC4WP_Integration_Manager {
 	protected $integrations = array();
 
 	/**
-	 * @var MC4WP_Integration_Tags
-	 */
-	protected $tags;
-
-	/**
-	* Constructor
-	*/
-	public function __construct() {
-		$this->tags = new MC4WP_Integration_Tags();
-	}
-
-	/**
 	 * Add hooks
 	 */
 	public function add_hooks() {
 		add_action( 'after_setup_theme', array( $this, 'initialize' ) );
-
-		$this->tags->add_hooks();
 	}
-
 
 	/**
 	 * Add hooks

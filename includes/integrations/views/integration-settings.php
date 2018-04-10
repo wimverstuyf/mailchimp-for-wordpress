@@ -81,7 +81,6 @@
 								<p class="help">
 									<?php _e( 'Select "no" if you want to ask your visitors before they are subscribed..', 'mailchimp-for-wp' ); 
 									echo '<br />';
-
 									printf( __( '<strong>Warning: </strong> enabling this may have consequences for your <a href="%s">GDPR compliance</a>.', 'mailchimp-for-wp' ), 'https://kb.mc4wp.com/gdpr-compliance/#utm_source=wp-plugin&utm_medium=mailchimp-for-wp&utm_campaign=integrations-page' ); ?>
 									</p>
 							</td>
